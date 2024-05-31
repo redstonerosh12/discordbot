@@ -2,6 +2,8 @@ import discord
 import responses
 import safeconvert
 import info
+import log
+import roleReactFind
 
 async def send_message(message, user_message, is_private):
     try:
@@ -45,6 +47,21 @@ def run_discord_bot():
         if user_message[0] == "+":
             user_message = user_message[1:]
             await send_message(message, user_message, is_private=True)
+
+    @client.event
+    async def on_raw_reaction_add(payload):
+        guild = discord.utils.find(lambda g: g.id == payload.guild_id, client.guilds)
+        member = await guild.fetch_member(payload.user_id)
+        
+        log.i("@bot.pyon_raw_reaction_add", member)
+        role = roleReactFind.process_payload(payload, client)
+
+        if role is not None:
+            await member.add_roles(role)
+            log.d("@bot.py/on_raw_reaction_add/role!=None member role added!")
+            log.m(f"user '{member}' has had role '{role}' added")
+        else:
+            log.i("@bot.py/on_raw_reaction_add/role!=None member role add failed!")
 
 
 

@@ -13,3 +13,11 @@ The token that logs your discord bot in, is unique and static for each bot, and 
 + util.py
 + main.py
 ```
+
+### v1.1
++ bot can now give roles to users based on message react 
+```bash
++ log.py
++ roleReactFind.py
+| bot.py
+```
