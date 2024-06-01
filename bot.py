@@ -53,16 +53,31 @@ def run_discord_bot():
         guild = discord.utils.find(lambda g: g.id == payload.guild_id, client.guilds)
         member = await guild.fetch_member(payload.user_id)
         
-        log.i("@bot.pyon_raw_reaction_add", member)
-        role = roleReactFind.process_payload(payload, client)
+        log.i("@bot.py/on_raw_reaction_add", member)
+        role = roleReactFind.process_payload(payload, client, guild)
 
-        if role is not None:
+        if role is not None and not roleReactFind.hasAClassRole(member, guild):
             await member.add_roles(role)
             log.d("@bot.py/on_raw_reaction_add/role!=None member role added!")
             log.m(f"user '{member}' has had role '{role}' added")
         else:
-            log.i("@bot.py/on_raw_reaction_add/role!=None member role add failed!")
+            log.i("@bot.py/on_raw_reaction_add/role!=None member role add illegal as role already present or failed!")
 
+
+    @client.event
+    async def on_raw_reaction_remove(payload):
+        guild = discord.utils.find(lambda g: g.id == payload.guild_id, client.guilds)
+        member = await guild.fetch_member(payload.user_id)
+        
+        log.i("@bot.py/on_raw_reaction_add", member)
+        role = roleReactFind.process_payload(payload, client, guild)
+
+        if role is not None:
+            await member.remove_roles(role)
+            log.d("@bot.py/on_raw_reaction_add/role!=None member role removed!")
+            log.m(f"user '{member}' has had role '{role}' removed")
+        else:
+            log.i("@bot.py/on_raw_reaction_add/role!=None member role remove failed!")
 
 
     client.run(TOKEN)

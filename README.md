@@ -21,3 +21,12 @@ The token that logs your discord bot in, is unique and static for each bot, and 
 + roleReactFind.py
 | bot.py
 ```
+
+### v1.2
++ bot can now remove roles from the users based on react remove
+```bash
+| bot.py
+| roleReactFind.py
+```
+
+
